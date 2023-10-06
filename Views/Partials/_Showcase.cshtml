@@ -1,0 +1,26 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@using Umbraco.Cms.Core.Models
+
+<div class="haeder-content">
+    <div class="showcase-right">
+        <img src="~/images/backgrounds/background-lines.svg" alt="background-lines">
+    </div>
+    <div class="showcase-content">
+        <h1>@Model.Value("showcaseTitle")</h1>
+        <p>@Model.Value("showcaseDescription")</p>
+        <div>
+            <button class="yellow-button">@Model.Value("showcaseButtonLeft")<a href="@Model.Value("urlToPageUnderConstruction")"></a> <i class="fa-solid fa-arrow-up-right"></i></button>
+            <button class="trans-button">@Model.Value("showcaseButtonRight")<a href="@Model.Value("urlToPageUnderConstruction")"></a> <i class="fa-solid fa-arrow-up-right"></i></button>
+        </div>
+    </div>
+    <div class="showcase-img">
+        @{
+            var showcaseImage = Model.Value<MediaWithCrops>("showcaseImage");
+            if (showcaseImage != null)
+            {
+                <img src="@showcaseImage.MediaUrl()" alt="@Model.Value("showcaseTitle")" />
+            }
+        }
+    </div>
+    <div class="showcase-left"></div>
+</div>

@@ -1,0 +1,21 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockListItem>;
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@using Umbraco.Cms.Core.Models
+@{
+    var content = (ContentModels.GlobalProjectContent)Model.Content;
+}
+
+<div class="project-typ">
+    @{
+        var globalProjectContentImage = content.Value<MediaWithCrops>("globalProjectContentImage");
+        if (globalProjectContentImage != null)
+        {
+            <img src="@globalProjectContentImage.MediaUrl()" alt="@content.Value("globalProjectContentTitle")" />
+        }
+    }
+    <p>@content.Value("globalProjectContentTitle")</p>
+    <div class="line"></div>
+    <button><a href="/@content.Value("globalProjectContentButtonLink")">@content.Value("globalProjectContentButtonText")<i class="fa-solid fa-arrow-up-right"></i></a></button>
+</div>
+
+

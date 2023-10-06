@@ -1,0 +1,21 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.Employee>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@using Umbraco.Cms.Core.Models
+
+@{
+	Layout = "_UnderConstruction.cshtml";
+}
+
+<div class="memb me1">
+    
+    @{
+        var employeeImage = Model.Value<MediaWithCrops>("employeeImage");
+        if (employeeImage != null)
+        {
+            <img src="@employeeImage.MediaUrl()" alt="@Model.Value("employeeName")" style="width: 200px; height:auto;" />
+        }
+    }
+    <h5>@Model.Value("employeeName")</h5>
+    <p>@Model.Value("emplyeeWorkTitle")</p>
+</div>

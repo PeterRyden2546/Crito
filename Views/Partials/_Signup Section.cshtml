@@ -1,0 +1,22 @@
+﻿@using Crito.Models;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+
+@{
+    var newsletterForm = new NewsletterForm();
+}
+<section class="news-section">
+    <img src="~/images/backgrounds/background-wavy-lines.svg" alt="background-wavy-lines">
+    <div class="container-news">
+        <div class="news-content">
+            <h1>@Model.Value("signupTitle")</h1>
+        </div>
+        <div class="news-sub">
+            @using (Html.BeginUmbracoForm("Index", "Subscriber", FormMethod.Post))
+            {
+                <div asp-validation-summary="ModelOnly"></div>
+                <input type="email" asp-for="@newsletterForm.Email" placeholder="@Model.Value("signupPlaceholder")" />
+                <button type="submit">@Model.Value("signupButton") <i class="fa-solid fa-arrow-up-right"></i></button>
+            }
+        </div>
+    </div>
+</section>

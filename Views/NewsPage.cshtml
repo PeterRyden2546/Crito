@@ -1,0 +1,99 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.NewsPage>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@using Umbraco.Cms.Core.Models.PublishedContent;
+@{
+    Layout = "_LayoutWithBreadcrumb.cshtml";
+
+    var itemsPerPage = 9;
+    var pageNumber = 1;
+
+    if (!int.TryParse(Context.Request.Query["page"], out pageNumber))
+        pageNumber = 1;
+
+    var selection = Umbraco?.Content(Guid.Parse("bb9e3502-3e2b-4bef-abc9-ba32636eac5b"))?
+    .ChildrenOfType("newsItemPage")?
+    .Where(x => x.IsVisible())
+    .OrderByDescending(x => x.CreateDate).ToList();
+
+    var totalItems = selection?.Count() ?? 0;
+    var pagesItems = selection?.Skip((pageNumber - 1) * itemsPerPage).Take(itemsPerPage);
+    var totalPages = (int)Math.Ceiling((decimal)totalItems / itemsPerPage);
+
+}
+
+<section class="blog-section">
+    <div class="blog-container">
+        <div class="blog-breadcrumb">
+            <div class="blog-headline">
+                <h1>@Model.Value("newsPageTitle")</h1>
+            </div>
+        </div>
+        <div class="news-articles">
+            
+           
+
+            @if(pagesItems != null)
+            {
+                @foreach (var item in pagesItems)
+                {
+
+                    var url = item.Url();
+                    var date = item.CreateDate;
+                    var image = item.Value<IPublishedContent>("newsImage");
+                    var category = item.Value("newsCategory");
+                    var title = item.Name();
+                    var preamble = item.Value("newsPreamble");
+
+                    <div class="news-article a1 mb-5">
+                        <a href="@url">
+                            <div class="img-article">
+                                <img src="@image?.Url()" alt="linkedin-sales-solutions">
+                                <div class="date-article">
+                                    <p class="date-nr">@date.ToString("dd")</p><p class="date-m"> @date.ToString("MMM")</p>
+                                </div>
+                            </div>
+                            <p>@category</p>
+                            <h5>@title</h5>
+                            <p>@preamble</p>
+                        </a>
+                    </div>
+                }
+            }
+
+            
+        </div>
+        @if (totalPages > 1)
+        {
+            <div class="blog-menu-n">
+     
+                @if (pageNumber > 1)
+                {
+                    <div class="n0 menu"><a href="?page=@(pageNumber - 1)"><i class="fa-solid fa-angle-left"></i></a></div>
+                }
+
+                @for (int i = 1; i <= Math.Ceiling((decimal)totalItems / itemsPerPage); i++)
+                {
+                    if (i == pageNumber)
+                    {
+                        <div class="n1 menu"><a href="?page=@i">@i</a></div>
+                    }
+                    else
+                    {
+                        <div class="n2 menu"><a href="?page=@i">@i</a></div>
+                    }
+                }
+
+                @if (pageNumber < Math.Ceiling((decimal)totalItems / itemsPerPage))
+                {
+                    <div class="n6 menu"><a href="?page=@(pageNumber + 1)"><i class="fa-solid fa-angle-right"></i></a></div>
+                }
+
+            </div>
+        }
+
+    </div>
+</section>
+
+
+@await Html.PartialAsync("_Signup Section")

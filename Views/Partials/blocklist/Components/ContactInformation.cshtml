@@ -1,0 +1,13 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockListItem>;
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@{
+    var content = (ContentModels.ContactInformation)Model.Content;
+}
+
+<div class="contact-info-content c1">
+    <div class="contact-symbol"><i class="@content.Value("contactInformationIcon")"></i></div>
+    <div class="contat-info-text">
+        <h5>@content.Value("contactInformationTitle")</h5>
+        <p>@content.Value("contactInformationDetails")</p>
+    </div>
+</div>

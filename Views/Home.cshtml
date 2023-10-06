@@ -1,0 +1,284 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.Home>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@using Crito.Models;
+@{
+	Layout = "_Layout.cshtml";
+	
+	var itemsPerPage = 3;
+    var pageNumber = 1;
+    
+    if (!int.TryParse(Context.Request.Query["page"], out pageNumber))
+        pageNumber = 1;
+    
+    var selection = Umbraco?.Content(Guid.Parse("bb9e3502-3e2b-4bef-abc9-ba32636eac5b"))?
+    .ChildrenOfType("newsItemPage")?
+    .Where(x => x.IsVisible())
+    .OrderByDescending(x => x.CreateDate).ToList();
+    
+    var totalItems = selection?.Count() ?? 0;
+    var pagesItems = selection?.Skip((pageNumber - 1) * itemsPerPage).Take(itemsPerPage);
+    var totalPages = (int)Math.Ceiling((decimal)totalItems / itemsPerPage);
+    
+    var employee = Umbraco?.Content(Guid.Parse("5bb6607d-fb9d-4c97-8e30-fe0521c07a5b"))?
+    .ChildrenOfType("employee")?
+    .Where(x => x.IsVisible())
+    .OrderBy(x => x.CreateDate).ToList();
+    
+    var employeesPerPage =4;
+    var totalEmployees = employee?.Count() ?? 0;
+    var employeesPages = employee?.Skip((pageNumber - 1) * employeesPerPage).Take(employeesPerPage);
+    
+    var testimonial = Umbraco?.Content(Guid.Parse("5bb6607d-fb9d-4c97-8e30-fe0521c07a5b"))?
+    .ChildrenOfType("testimonial")?
+    .Where(x => x.IsVisible())
+    .OrderByDescending(x => x.CreateDate).ToList();
+
+
+
+    
+}
+
+<main>
+    @await Html.PartialAsync("_Brands")
+    
+    <section class="section-features">
+        <div class="div-features">
+            <div class="features-headline">
+                <p>@Model.Value("serviceFeaturesSectionTitle")</p>
+                <h3>@Model.Value("serviceFeaturesHeading")</h3>
+                <button class="yellow-button"><a href="@Model.Value("serviceFeaturesButtonUrl")"> @Model.Value("serviceFeaturesButtonText") <i class="fa-solid fa-arrow-up-right"></i></a></button>
+            </div>
+            <div class="business">
+                <div class="advice-startup">
+                    @Html.GetBlockListHtml(Model.ServiceFeatures)
+                </div>
+                <div class="financial-risk">
+                    @Html.GetBlockListHtml(Model.ServiceFeatures2)
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    @await Html.PartialAsync("_About Company")
+    
+    <section class="service">
+        <div class="service-content">
+            <p>@Model.Value("ourServiceTitle")</p>
+            <h3>@Model.Value("ourServiceHeadning")</h3>
+            <div class="box-content">
+                @Html.GetBlockListHtml(Model.OurServiceBox)
+            </div>
+            <div class="buton-service">
+                <button><a href="@Model.Value("ourServiceButtonUrl")">@Model.Value("ourServiceButtonText")<i class="fa-solid fa-arrow-up-right"></i></a></button>
+            </div>
+        </div>
+    </section>
+    
+    <section class="why">
+        <div class="div-why">
+            <div class="why-content">
+                <p>@Model.Value("whyUsTitle")</p>
+                <h3>@Model.Value("whyUsHeadning")</h3>
+                @Html.GetBlockListHtml(Model.WhyUsBox)
+            </div>
+            @await Html.PartialAsync("_Why Us Image")
+        </div>
+    </section>
+    
+    <section class="global">
+        <div class="div-global">
+            <p>@Model.Value("globalProjectsTitle")</p>
+            <h3>@Model.Value("globalProjectsHeadning")</h3>
+        </div>
+        <div class="project">
+            <div class="grow-edu">
+                @Html.GetBlockListHtml(Model.GlobalProjectsContent)
+            </div>
+            <div class="why-business">
+                @Html.GetBlockListHtml(Model.GlobalProjectsContent2)
+            </div>
+            
+        </div>
+        <button class="all"><a href="/@Model.Value("blogButtonLink")">@Model.Value("blogButtonText") <i class="fa-solid fa-arrow-up-right"></i></a></button>
+    </section>
+
+    <section class="blog-section">
+        <div class="blog-container">
+            <div class="blog-breadcrumb">
+                <div class="blog-headline">
+                    <p>@Model.Value("blogTitle")</p>
+                    <h1>@Model.Value("blogHeadning")</h1>
+                </div>
+                <div class="blog-breadcrumb-button">
+                    <button><a href="/@Model.Value("blogButtonLink")">@Model.Value("blogButtonText")<i class="fa-solid fa-arrow-up-right"></i></a></button>
+                </div>
+            </div>
+            <div class="news-articles">
+    
+    
+    
+                @if(pagesItems != null)
+                {
+                    @foreach (var item in pagesItems)
+                    {
+            
+                        var url = item.Url();
+                        var date = item.CreateDate;
+                        var image = item.Value<IPublishedContent>("newsImage");
+                        var category = item.Value("newsCategory");
+                        var title = item.Name();
+                        var preamble = item.Value("newsPreamble");
+            
+                        <div class="news-article a1 mb-5">
+                            <a href="@url">
+                                <div class="img-article">
+                                    <img src="@image?.Url()" alt="linkedin-sales-solutions">
+                                    <div class="date-article">
+                                        <p class="date-nr">@date.ToString("dd")</p><p class="date-m"> @date.ToString("MMM")</p>
+                                    </div>
+                                </div>
+                                <p>@category</p>
+                                <h5>@title</h5>
+                                <p>@preamble</p>
+                            </a>
+                        </div>
+                    }
+                }
+    
+    
+            </div>
+            
+            @if (totalPages > 1)
+                {
+                    <div class="blog-menu">
+        
+                        @for (int i = 1; i <= Math.Ceiling((decimal)totalItems / itemsPerPage); i++)
+                            {
+                                if (i == pageNumber)
+                                {
+                                    <div class="m1 menu"><a href="?page=@i">@i</a></div>
+                                }
+                                else
+                                {
+                                    <div class="m2 menu"><a href="?page=@i">@i</a></div>
+                                }
+                            }
+                    </div>
+                }
+        </div>
+    </section>
+    
+    <section class="tt">
+        <div class="team-test-container">
+            <div class="team">
+                <div class="team-headline-container">
+                    <div class="team-headline">
+                        <div class="team-text">
+                            <p>@Model.Value("teamTitle")</p>
+                            <h3>@Model.Value("teamHeading")</h3>
+                        </div>
+                        <div class="team-button">
+                            <button><a href="/@Model.Value("teamButtonLink")">@Model.Value("blogButtonText") <i class="fa-solid fa-arrow-up-right"></i></a></button>
+                        </div>
+                    </div>
+                    <div class="team-memb">
+                        
+                        @if (employeesPages != null)
+                        {
+                            @foreach (var item in employeesPages)
+                            {
+
+                                var image = item.Value<IPublishedContent>("employeeImage");
+                                var name = item.Value("employeeName");
+                                var title = item.Value("emplyeeWorkTitle");
+
+                                <div class="memb me1">
+                                    <img src="@image?.Url()" alt="@name">
+                                    <h5>@name</h5>
+                                    <p>@title</p>
+                                </div>
+
+                            }
+                        }
+
+                    	
+
+                    </div>
+                    <div class="menb-menu">
+
+                        @for (int i = 1; i <= Math.Ceiling((decimal)totalEmployees / employeesPerPage); i++)
+                            {
+                                if (i == pageNumber)
+                                {
+                                    <div class="m2 menu"><a href="?page=@i">@i</a></div>
+                                }
+                                else
+                                {
+                                    <div class="m1 menu"><a href="?page=@i">@i</a></div>
+                                }
+                            }
+
+                    </div>
+                </div>
+            </div>
+            <div class="test">
+                <div class="test-container">
+                    <div class="test-headline">
+                        <div class="test-headline-content">
+                            <p>@Model.Value("testimonialTitle")</p>
+                            <h3>@Model.Value("testimonialHeading")</h3>
+                        </div>
+                    </div>
+                    <div class="comments">
+                        @if(testimonial != null)
+                        {
+                            @foreach (var item in testimonial)
+                            {
+
+                                var image = item.Value<IPublishedContent>("testimonialImage");
+                                var name = item.Value("testimonialName");
+                                var workTitle = item.Value("testimonialWorkTitle");
+                                var description = item.Value("testimonialDescription");
+                                string rateString = item.Value<string>("testimonialRate");
+                                decimal rateDecimal;
+
+                                <div class="comment com1">
+                                    <div class="rate">
+
+                                        @if (decimal.TryParse(rateString, out rateDecimal))
+                                        {
+                                            @for (int i = 1; i <= Math.Ceiling(rateDecimal); i++)
+                                            {
+                                                <i class="fa-solid fa-star fa-2xs"></i>
+                                            }
+                                        }
+
+                                    </div>
+                                    <p>@description</p>
+                                    <div class="pers-com">
+                                        <div class="pers-img">
+
+                                            <img src="@image?.Url()" alt="@name">
+                                        </div>
+                                        <div class="pers">
+                                            <h6>@name</h6>
+                                            <p>@workTitle</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        
+
+                    </div>
+                    <div class="test-button">
+                        <button><a href="/@Model.Value("testimonialButtonLink")">@Model.Value("testimonialButtonText") <i class="fa-solid fa-arrow-up-right"></i></a></button>
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </section>
+    
+    @await Html.PartialAsync("_Signup Section")
+</main>

@@ -1,0 +1,43 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.Testimonial>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@using Umbraco.Cms.Core.Models
+@{
+	Layout = "_UnderConstruction.cshtml";
+	string rateString = Model.Value<string>("testimonialRate");
+
+    decimal rateDecimal;
+    
+}
+
+
+<div class="comment com1">
+    <div class="rate">
+        
+        @if (decimal.TryParse(rateString, out rateDecimal))
+            {
+                @for (int i = 1; i <= Math.Ceiling(rateDecimal); i++)
+                {
+                    <i class="fa-solid fa-star fa-2xs"></i>
+                }
+            }
+
+    </div>
+    <p>@Model.Value("testimonialDescription")</p>
+    <div class="pers-com">
+        <div class="pers-img">
+            
+            @{
+                var testimonialImage = Model.Value<MediaWithCrops>("testimonialImage");
+                if (testimonialImage != null)
+                {
+                    <img src="@testimonialImage.MediaUrl()" alt="@Model.Value("testimonialName")" style="width: 200px; height:auto;" />
+                }
+            }
+        </div>
+        <div class="pers">
+            <h6>@Model.Value("testimonialName")</h6>
+            <p>@Model.Value("testimonialWorkTitle")</p>
+        </div>                          
+    </div>
+</div>

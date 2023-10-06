@@ -1,0 +1,75 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@using Umbraco.Cms.Core
+@using Umbraco.Cms.Core.Models.PublishedContent
+@using Umbraco.Cms.Core.Routing
+@using Umbraco.Extensions
+
+@inject IPublishedValueFallback PublishedValueFallback
+@inject IPublishedUrlProvider PublishedUrlProvider
+
+
+@{ 
+    var site = Model.Root();
+    var selection = Model.Root().Children.Where(x => x.IsVisible(PublishedValueFallback)).ToArray(); 
+}
+
+
+<nav>
+    <div class="nav">
+        <div class="nav-logo">
+            <img src="~/images/logos/logotype.svg" alt="logo Crito">
+        </div>
+        <div class="nav-container">
+            <div class="nav-upper">
+                <div class="nav-links">
+                    <div class="nav-contact">
+                        <div class="nav-phone">
+                            <i class="fa-regular fa-phone-volume"></i>
+                            <p>@Model.Value("navPhoneNr")</p>
+                        </div>
+                        <div class="nav-mail">
+                            <p>| </p>
+                            <i class="fa-sharp fa-light fa-envelope"></i>
+                            <a>@Model.Value("navEmail")</a>
+                        </div>
+                        <div class="nav-adress">
+                            <p>| </p>
+                            <i class="fa-thin fa-location-dot"></i>
+                            <p class="adress-street">@Model.Value("navStreet")</p>
+                        </div>
+                        <div class="nav-soc-buttons">
+                            <a class="nav-a1" href="@Model.Value("navFacebook")" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+                            <a class="nav-a2" href="@Model.Value("navTwitter")" target="_blank"><i class="fa-brands fa-twitter"></i></a>
+                            <a class="nav-a3" href="@Model.Value("navInstagram")" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                            <a class="nav-a4" href="@Model.Value("navLinkedin")" target="_blank"><i class="fa-brands fa-linkedin-in"></i></a>
+                         </div>
+                    </div>
+                    <div class="nav-line"></div>
+                </div>
+            </div>
+            <div class="nav-lower">
+                <div class="nav-pages">
+                    <div class="nav-page">
+                        <a class="@(Model.Id == site.Id ? "current" : null)" href="@site.Url()">@site.Name</a>
+                        
+                        
+                        @if (selection?.Length > 0)
+                        {
+                        
+                            @foreach (var item in selection)
+                            {
+                                <a class="@(item.IsAncestorOrSelf(Model) ? "current" : null)" href="@item.Url(PublishedUrlProvider)">@item.Name</a>
+                            }
+                        }
+                        
+                    </div>
+                </div>            
+                <div class="nav-buttons">
+                    <div class="nav-login">
+                        <button><a href="/login">@Model.Value("navButton")<i class="fa-solid fa-arrow-up-right"></i></a></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>

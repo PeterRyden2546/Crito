@@ -1,0 +1,15 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@using Umbraco.Cms.Core.Models
+
+
+<div class="why-img">
+            <div class="why-box"></div>
+            @{
+                var whyUsImage = Model.Value<MediaWithCrops>("whyUsImage");
+                if (whyUsImage != null)
+                {
+                    <img src="@whyUsImage.MediaUrl()" alt="@Model.Value("whyUsTitle")" />
+                }
+            }
+        </div>
+

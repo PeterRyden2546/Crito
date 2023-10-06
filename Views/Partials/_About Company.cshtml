@@ -1,0 +1,30 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@using Umbraco.Cms.Core.Models
+
+<section class="section-about">
+    <div class="div-about">
+        <div class="foto-about">
+            @{
+                var aboutCompanyFounderImage = Model.Value<MediaWithCrops>("aboutCompanyFounderImage");
+                if (aboutCompanyFounderImage != null)
+                {
+                    <img src="@aboutCompanyFounderImage.MediaUrl()" alt="@Model.Value("aBoutCompanyFounder")" />
+                }
+            }
+            <div class="foto-content">
+                <h5>@Model.Value("aboutCompanyFounderName") <span>Founder</span></h5>
+                <p>@Model.Value("aboutCompanyFounderDescription")</p>
+            </div>
+        </div>
+        <div class="about-content">
+            <p><span>@Model.Value("aboutCompanyTitle")</span></p>
+            <h3>@Model.Value("aboutCompanyHeadning")</h3>
+            <p>@Model.Value("aboutCompanyDescription1")</p>
+            <p> @Model.Value("aboutCompanyDescription2")</p>
+            <div class="buttons">
+                <button class="leran-button"><a href="@Model.Value("aboutCompanyLeftButtonUrl")">@Model.Value("aboutCompanyLeftButtonText")<i class="fa-solid fa-arrow-up-right"></i></a></button>
+                <button class="intro-button"><a href="@Model.Value("aboutCompanyRightButtonUrl")"><i class="fa-sharp fa-regular fa-circle-play fa-2xl"></i>@Model.Value("aboutCompanyRightButtonText")</a></button>
+            </div>
+        </div>
+    </div>
+</section>
